@@ -1,5 +1,5 @@
 ## EM DESENVOLVIMENTO
----
+
 # 🔥 HotPatchRPO
 
 **HotPatchRPO** é uma ferramenta gráfica para Windows que permite aplicar patches `.ptm` em arquivos `.rpo` do Protheus **sem precisar reiniciar o sistema ou desconectar usuários**.
