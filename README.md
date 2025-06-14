@@ -28,8 +28,6 @@
 
 Distribuído sob a licença [MIT](LICENSE).
 
-Você pode usar, modificar e distribuir este software, inclusive para fins comerciais, desde que mantenha os créditos ao autor original.
-
 ---
 
 ## ✍️ Autor
