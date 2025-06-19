@@ -1,11 +1,9 @@
-
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <windows.h>
 
-void ObterCaminhoIni();
-void CarregarINI(HWND hEditDir);
-void SalvarINI(HWND hEditDir);
+int ObterSecoesComSourcePath(const char *iniPath, HWND hCombo);
+void ObterSourcePathDaSecao(const char *iniPath, const char *secao, char *dest);
 
 #endif

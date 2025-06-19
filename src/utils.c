@@ -1,34 +1,25 @@
-
-#include <windows.h>
+#include "utils.h"
 #include <stdio.h>
 #include <string.h>
 
-char iniPath[MAX_PATH];
+int ObterSecoesComSourcePath(const char *iniPath, HWND hCombo) {
+    char buffer[4096];
+    GetPrivateProfileSectionNamesA(buffer, sizeof(buffer), iniPath);
 
-void ObterCaminhoIni() {
-    GetModuleFileNameA(NULL, iniPath, MAX_PATH);
-    char *lastSlash = strrchr(iniPath, '\\');
-    if (lastSlash) *(lastSlash + 1) = '\0';
-    strcat(iniPath, "aplica_patch.ini");
-}
-
-void CarregarINI(HWND hEditDir) {
-    FILE *f = fopen(iniPath, "r");
-    if (!f) return;
-    char linha[512];
-    while (fgets(linha, sizeof(linha), f)) {
-        linha[strcspn(linha, "\r\n")] = 0;
-        if (strncmp(linha, "dir=", 4) == 0)
-            SetWindowTextA(hEditDir, linha + 4);
+    int count = 0;
+    char *p = buffer;
+    while (*p) {
+        char val[MAX_PATH] = {0};
+        GetPrivateProfileStringA(p, "SourcePath", "", val, sizeof(val), iniPath);
+        if (strlen(val) > 0) {
+            SendMessageA(hCombo, CB_ADDSTRING, 0, (LPARAM)p);
+            count++;
+        }
+        p += strlen(p) + 1;
     }
-    fclose(f);
+    return count;
 }
 
-void SalvarINI(HWND hEditDir) {
-    FILE *f = fopen(iniPath, "w");
-    if (!f) return;
-    char buffer[MAX_PATH];
-    GetWindowTextA(hEditDir, buffer, MAX_PATH);
-    fprintf(f, "dir=%s\n", buffer);
-    fclose(f);
+void ObterSourcePathDaSecao(const char *iniPath, const char *secao, char *dest) {
+    GetPrivateProfileStringA(secao, "SourcePath", "", dest, MAX_PATH, iniPath);
 }

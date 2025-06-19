@@ -1,12 +1,12 @@
-
 #include <windows.h>
 #include "interface.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     RegistrarJanela(hInstance);
+    HWND hwnd = CreateWindowW(L"HotPatchRPO", L"HotPatchRPO", WS_OVERLAPPEDWINDOW,
+                            CW_USEDEFAULT, CW_USEDEFAULT, 600, 320,
+                            NULL, NULL, hInstance, NULL);
 
-    HWND hwnd = CreateWindowW(L"AppWin", L"Selecionar Arquivo e Diretórios", WS_OVERLAPPEDWINDOW,
-                              CW_USEDEFAULT, CW_USEDEFAULT, 600, 400, NULL, NULL, hInstance, NULL);
     ShowWindow(hwnd, nCmdShow);
     UpdateWindow(hwnd);
 

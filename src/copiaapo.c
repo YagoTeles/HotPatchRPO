@@ -1,8 +1,8 @@
+#include "interface.h"
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "interface.h"
 
 void CopiarRecursivo(const char *origem, const char *destino) {
     char srcPath[1024], dstPath[1024];
@@ -30,20 +30,18 @@ void CopiarRecursivo(const char *origem, const char *destino) {
     FindClose(hFind);
 }
 
-void ExecutarConfirmar(HWND hwnd, HWND hEditDir, HWND hEditPtm, HWND hEditExe) {
-    char dirOrigem[MAX_PATH], arquivoPtm[MAX_PATH], arquivoExe[MAX_PATH];
-    GetWindowTextA(hEditDir, dirOrigem, MAX_PATH);
+void ExecutarConfirmar(HWND hwnd, const char *dirOrigem, HWND hEditPtm) {
+    char arquivoPtm[MAX_PATH];
     GetWindowTextA(hEditPtm, arquivoPtm, MAX_PATH);
-    GetWindowTextA(hEditExe, arquivoExe, MAX_PATH);
 
-    if (strlen(dirOrigem) == 0 || strlen(arquivoPtm) == 0 || strlen(arquivoExe) == 0) {
+    if (strlen(dirOrigem) == 0 || strlen(arquivoPtm) == 0) {
         MessageBoxW(hwnd, L"Preencha todos os campos!", L"Erro", MB_OK | MB_ICONERROR);
         return;
     }
 
     DWORD attr = GetFileAttributesA(dirOrigem);
     if (attr == INVALID_FILE_ATTRIBUTES || !(attr & FILE_ATTRIBUTE_DIRECTORY)) {
-        MessageBoxW(hwnd, L"Diretório inválido.", L"Erro", MB_OK | MB_ICONERROR);
+        MessageBoxW(hwnd, L"Diretório APO inválido.", L"Erro", MB_OK | MB_ICONERROR);
         return;
     }
 
@@ -52,12 +50,10 @@ void ExecutarConfirmar(HWND hwnd, HWND hEditDir, HWND hEditPtm, HWND hEditExe) {
     char timestamp[32];
     strftime(timestamp, sizeof(timestamp), "%y%m%d%H%M%S", tm_info);
 
-    char parentDir[MAX_PATH];
+    char parentDir[MAX_PATH], nomeOriginal[MAX_PATH];
     strcpy(parentDir, dirOrigem);
     char *lastSlash = strrchr(parentDir, '\\');
     if (lastSlash) *lastSlash = '\0';
-
-    char nomeOriginal[MAX_PATH];
     strcpy(nomeOriginal, lastSlash + 1);
 
     char dirDestino[1024];
@@ -65,9 +61,5 @@ void ExecutarConfirmar(HWND hwnd, HWND hEditDir, HWND hEditPtm, HWND hEditExe) {
 
     CopiarRecursivo(dirOrigem, dirDestino);
 
-    char comando[2048];
-    snprintf(comando, sizeof(comando), "\"%s\" \"%s\" \"%s\"", arquivoExe, arquivoPtm, dirDestino);
-    WinExec(comando, SW_SHOW);
-
-    MessageBoxW(hwnd, L"Diretório copiado e processo iniciado com sucesso.", L"Concluído", MB_OK | MB_ICONINFORMATION);
+    MessageBoxW(hwnd, L"Patch aplicado com sucesso!", L"Pronto", MB_OK | MB_ICONINFORMATION);
 }
